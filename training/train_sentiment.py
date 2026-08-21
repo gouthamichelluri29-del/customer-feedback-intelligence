@@ -1,6 +1,6 @@
 import joblib
 import pandas as pd
-
+import json
 from huggingface_hub import hf_hub_download
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -66,18 +66,53 @@ def train_model(train_df):
     return model
 
 def evaluate_model(model, test_df):
-    x_test = test_df["review_text"]
+    X_test = test_df["review_text"]
     y_test = test_df["label"]
 
-    predictions = model.predict(x_test)
+    predictions = model.predict(X_test)
 
-    print("\nAccuracy:")
-    print(accuracy_score(y_test,predictions))
+    accuracy = accuracy_score(y_test, predictions)
+
+    report = classification_report(
+        y_test,
+        predictions,
+        output_dict=True,
+    )
+
+    cm = confusion_matrix(
+        y_test,
+        predictions,
+        labels=["negative", "positive"],
+    )
+
+    print(f"\nAccuracy: {accuracy:.4f}")
+
     print("\nClassification report:")
-    print(classification_report(y_test, predictions, digits=4))
-    print("\nConfusion matrix:")
-    print(confusion_matrix(y_test, predictions))
+    print(
+        classification_report(
+            y_test,
+            predictions,
+            digits=4,
+        )
+    )
 
+    print("\nConfusion matrix:")
+    print(cm)
+
+    metrics = {
+        "accuracy": accuracy,
+        "macro_precision": report["macro avg"]["precision"],
+        "macro_recall": report["macro avg"]["recall"],
+        "macro_f1": report["macro avg"]["f1-score"],
+        "negative_f1": report["negative"]["f1-score"],
+        "positive_f1": report["positive"]["f1-score"],
+        "test_samples": len(test_df),
+    }
+
+    with open("evaluation/metrics.json", "w") as file:
+        json.dump(metrics, file, indent=4)
+
+    print("\nMetrics saved to evaluation/metrics.json")
 
 def save_model(model):
     joblib.dump(model, MODEL_PATH)

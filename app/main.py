@@ -5,6 +5,7 @@ from app.core.logging_config import configure_logging
 
 configure_logging()
 
+
 app = FastAPI(
     title = "Customer Feedback Intelligence API",
     description ="AI Powered API for analysing customer feedback.",
@@ -16,6 +17,17 @@ app = FastAPI(
 def health_check():
     return{
         "status": "healthy"
+    }
+@app.get("/model/info", tags=["Model"])
+def model_info():
+    return {
+        "model": "TF-IDF + Logistic Regression",
+        "task": "binary sentiment classification",
+        "labels": ["negative", "positive"],
+        "training_dataset": "Cleanlab Amazon Reviews",
+        "test_accuracy": 0.951,
+        "macro_f1": 0.9502,
+        "version": "1.0.0",
     }
 
 app.include_router(feedback_router)
