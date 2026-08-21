@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Customer Feedback Intelligence</title>
+
+		<link rel="stylesheet" href="style.css" />
+	</head>
+
+	<body>
+		<main class="container">
+			<h1>Customer Feedback Intelligence</h1>
+
+			<p class="subtitle">Analyse customer feedback using machine learning.</p>
+
+			<textarea
+				id="feedback"
+				placeholder="Enter customer feedback here..."
+				rows="7"
+			></textarea>
+
+			<button id="analyseButton">Analyse Feedback</button>
+
+			<section id="results" class="results hidden">
+				<h2>Analysis</h2>
+
+				<div class="result-row">
+					<span>Sentiment</span>
+					<strong id="sentiment">-</strong>
+				</div>
+
+				<div class="result-row">
+					<span>Category</span>
+					<strong id="category">-</strong>
+				</div>
+
+				<div class="result-row">
+					<span>Priority</span>
+					<strong id="priority">-</strong>
+				</div>
+			</section>
+
+			<p id="errorMessage" class="error"></p>
+		</main>
+
+		<script src="script.js"></script>
+	</body>
+</html>

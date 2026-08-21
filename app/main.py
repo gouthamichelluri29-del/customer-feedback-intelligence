@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from app.api.feedback import router as feedback_router
 from app.core.logging_config import configure_logging
-
+from fastapi.middleware.cors import CORSMiddleware
 configure_logging()
 
 
@@ -12,7 +12,15 @@ app = FastAPI(
     version ="1.0.0"
 
 )
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://gouthamichelluri29-del.github.io"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 @app.get("/health")
 def health_check():
     return{
